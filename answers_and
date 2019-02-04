@@ -1,7 +1,7 @@
 
 #========================# Homework 1 #========================#
 # Submitter: Martina, Hermanova Billstein | marbil | student6
-# Comments:  
+# Comments:  /homework1 is a new directory I made which will be used as my main working directory instead of the home directory
 #==============================================================#
 
 
@@ -137,8 +137,20 @@ less S288C_reference_genome_R64-2-1_20150113.fsa
 # Output of first 10 base pairs: CCACACCACA
 
 
-#=# Section 6 - Homework #=#
+#===================# Section 6 - Homework #=====================#
+
+cd
+cd/homework1
+
+nano answers_and_procedure_of_homework1						# creates a file in which i pasted the procedure so far
+
+git init													# Initializes git
+git add answers_and											# Adds the file to git
+git status													# Shows the current status of untracked and added files
+git commit -m #Procedure of Homework 1 up to part 6"        # Commits changes with the added message
  
+
+
 
 
 
