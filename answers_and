@@ -1,0 +1,162 @@
+
+#========================# Homework 1 #========================#
+# Submitter: Martina, Hermanova Billstein | marbil | student6
+# Comments:  
+#==============================================================#
+
+
+
+#================# Section 1 - Managing files #================#
+wget https://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/S288C_reference_genome_Current_Release.tgz      # Download a reference yeast genome as compressed archive to the current directory
+
+tar -xzvf S288C_reference_genome_Current_Release.tgz    # Decompress the archive (will create a new diretory)
+
+# 1 
+
+ls 														 # Listing the objects in current directory
+#Output:
+#S288C_reference_genome_Current_Release.tgz S288C_reference_genome_R64-2-1_20150113
+
+# 2 
+ls S288C_reference_genome_R64-2-1_20150113          	#Listing files in newly created directory
+# Output: 8 files
+
+ls -l S288C_reference_genome_R64-2-1_20150113			# Listing detailed vertical list of directory contents
+
+# 3 
+mv S288C_reference_genome_R64-2-1_20150113 data			# Renames the directory to data
+
+# 4
+pwd														# Prints working directory "/home/student6/homework1"
+
+# 5
+cd data 												# Changes working directory to "data"
+pwd
+
+# 6
+ls
+less rna_coding_R64-2-1_20150113.fasta              	# Prints the file. It contains FASTA of several sequences
+
+# 7
+cd ~/homework1/
+mkdir results											# Creates a directory "results" in the current location
+touch results/counts.txt								# Creates a file in the given directory
+
+# 8
+mv results results_2019_01_23
+ls
+
+git init												# Initializes Git
+git add results_2019_01_23/counts.txt					# Adds the given file to git
+git commit -m "Creating counts-file"					# Commits ...
+
+
+#================# Section 2 - Analyze files #================#
+
+# 1
+wc -l data/orf_coding_all_R64-2-1_20150113.fasta			   	# Counts number of lines in given file
+#Output: 161265 data/orf_coding_all_R64-2-1_20150113.fasta
+
+wc -l data/orf_trans_all_R64-2-1_20150113.fasta
+#Output: 60443 data/orf_trans_all_R64-2-1_20150113.fasta
+
+# 2
+grep -c "^>" data/orf_coding_all_R64-2-1_20150113.fasta			# Counts number of lines starting with ">", which is the same as the number of sequences
+#Output: 6713
+
+# 3
+wc -l data/orf_coding_all_R64-2-1_20150113.fasta > results_2019_01_23/counts.txt			# Saves the output in the given file
+wc -l data/orf_trans_all_R64-2-1_20150113.fasta >> results_2019_01_23/counts.txt			# Adds the output to the given file
+grep -c "^>" data/orf_coding_all_R64-2-1_20150113.fasta >> results_2019_01_23/counts.txt	
+nano /results_2019_01_23/counts.txt								# Lets you modify the given file
+
+# 4 and 5
+grep "tRNA_gene" data/rna_coding_R64-2-1_20150113.fasta >> results_2019_01_23/counts.txt    # All tRNA-genes include this phrase only once. "^>t" could also be used, which returns same amount
+#Output: 299
+
+# 6
+cat results_2019_01_23/counts.txt
+# Output:
+#161265 lines in          data/orf_coding_all_R64-2-1_20150113.fasta
+#60443 lines in data/orf_trans_all_R64-2-1_20150113.fasta
+#6713 genes in data/orf_coding_all_R64-2-1_20150113.fasta
+#299 tRNA genes in data/rna_coding_R64-2-1-20150113.fasta
+
+# 7
+cd results_2019_01_23
+cp counts.txt counts.orig.txt									# copy file with new given name
+
+
+#==========# Section 3 - Working with text columns #===========#
+
+cd ~/homework1
+
+# gene experssion data (fold change)
+wget http://www.cbs.dtu.dk/courses/27619/ex1.dat
+
+# annotation
+wget http://www.cbs.dtu.dk/courses/27619/ex1.acc
+
+paste ex1.acc ex1.dat > data2									# Combinds the two downloaded files into a new one named "data2"
+
+
+#==========# Section 4 - Count yeast-human orthologs #===========#
+
+wget http://eggnog5.embl.de/download/eggnog_5.0/data/2759/2759_members.tsv.gz 		# Download new file
+
+gunzip 2759_members.tsv.gz															# Decompress the gz-file
+
+grep "4891." 2759_members.tsv | cut -f 2 | sort > groups_scerevisiae.txt 			# filter "TaxonID." | cut out column 2 | sort > RESULTS_FILE
+grep "9606." 2759_members.tsv | cut -f 2 | sort > groups_hsapiens.txt
+
+less -S groups_hsapiens.txt															# -S disables word wrap
+
+# Question: Why did we use the dot in the filtering?
+# Answer: All taxon_IDs end with a dot. by including it in the filtering we only get taxon_IDs and not Sequence_IDs. Also, maybe more importantly, we won't get taxon_IDs partly including 4891 or 9606 such as 4891XXX where X could be any numbers. We will only get the taxon_IDs we are loking for.
+
+comm -12 groups_hsapiens.txt groups_scerevisiae.txt | wc -l 						# -12 inhibits the first 2 results and wc -l only counts lines
+# Output: 838
+
+# All of this could have been done in one go with the following command:
+# comm -12 <(grep "4891." 2759_members.tsv | cut -f 2 | sort) <(grep "9606." 2759_members.tsv | cut -f 2 | sort) | wc -l
+
+
+#==============# Section 5 - Sequence Processing #===============#
+
+mkdir results_2019_02_04
+
+sed '/^>/!y/ACGT/UGCA/' data/S288C_reference_genome_R64-2-1_20150113.fsa > results_2019_02_04/S288C_RNA.fasta  # Prduces the complimentary RNA of the given DNA and saves it in a new file
+
+cd results_2019_02_04
+less S288C_RNA.fasta
+#Output of first 10 base pairs: GGUGUGGUGU
+
+cd 
+cd /homework1/data
+less S288C_reference_genome_R64-2-1_20150113.fsa
+# Output of first 10 base pairs: CCACACCACA
+
+
+#=# Section 6 - Homework #=#
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
