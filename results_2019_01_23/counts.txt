@@ -1,0 +1,4 @@
+161265 lines in		 data/orf_coding_all_R64-2-1_20150113.fasta
+60443 lines in data/orf_trans_all_R64-2-1_20150113.fasta
+6713 genes in data/orf_coding_all_R64-2-1_20150113.fasta
+299 tRNA genes in data/rna_coding_R64-2-1-20150113.fasta
