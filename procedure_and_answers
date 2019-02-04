@@ -1,7 +1,7 @@
 
 #========================# Homework 1 #========================#
 # Submitter: Martina, Hermanova Billstein | marbil | student6
-# Comments:  
+# Comments:  homework1 is a directory I created and will be used as my working directory instead of the home directory
 #==============================================================#
 
 
@@ -145,9 +145,12 @@ cd/homework1
 nano answers_and_procedure_of_homework1				               		# creates a file in which i pasted the procedure so far
 
 git init													                                       # Initializes git
-git add answers_and										                              	# Adds the file to git
+git add procedure_and_answers                              	# Adds the file to git
 git status												                                     	# Shows the current status of untracked and added files
-git commit -m "Procedure of Homework 1 up to part 6"        # Commits changes with the added message
+git commit -m "Procedure and answers up to section 6 task 3"        # Commits changes with the added message
+
+git remote add origin https://github.com/martinahb/homework1        # Adds the remote location I want to save my files
+git push origin master                                              # Saves the files added to git to the remote location
  
 # TASK 1 #
 
