@@ -154,10 +154,12 @@ git push origin master                                              # Saves the 
  
 # TASK 1 #
 
-cd data                                                     # changes directory to "data"
-grep "^chrII" saccharomyces_cervisiae_R64-2-1_20150113.gff > task1.txt       # saves all lines in the given file beginning with chrI into a new file named task1.txt
-wc -l task1.txt                                             # counts the lines (genes) in the given file
-# Output: 2256 task1.txt
+cd data                                                                             # changes directory to "data"
+grep $'\t'"gene"$'\t' saccharomyces_cerevisiae_R64-2-1_20150113.gff > task1.1.txt   # saves all lines containing "gene" proceeded and followed by a <tab> into a temporary file
+grep "^chrII"$'\t' task1.1.txt > task1.txt                                          # saves all lines in the temporary file beginning with chrII into a new file named task1.txt
+wc -l task1.txt                                                                     # counts the lines (genes) in the given file
+rm task1.1.txt                                                                      # removes the temporary file
+# Output: 456 task1.txt
 
 # TASK 2 #
 
