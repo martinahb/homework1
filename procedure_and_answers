@@ -161,40 +161,45 @@ wc -l task1.txt                                             # counts the lines (
 
 # TASK 2 #
 
-grep -o "C" S288C_reference_sequence_R64-2-1_20150113.fsa > testC                 # ommits everything but capital Cs in the given file and saves them in a new file named testC. Each C is saved on a separate line.
-wc test C                                                                         # counts lines, words and characters in the file. the number of lines are equal to the amount of Cs
-# Output: 2320610 2320610 4641220 testC (-2 since two Cs were in the header line)
+grep -v "^>" S288C_reference_sequence_R64-2-1_20150113.fsa > test               # removes header lines from the fasta
 
-grep -o "G" S288C_reference_sequence_R64-2-1_20150113.fsa > testG
-wc test G
-# Output: 2317100 2317100 4634200 testG
+grep -o "C" test > testC                            # ommits everything but capital Cs in the given file and saves them in a new file named testC. Each C is saved on a separate line.
+grep -o "G" test > testG
+grep -o "A" test > testA
+grep -o "T" test > testT
 
-# 2320608+2317100 = 4637708 Gs and Cs
+wc -l testC                                         # counts the number of lines in the file. The number of lines will be equal to the number of Cs in teh original fasta
+wc -l testG
+wc -l testA
+wc -l testT
 
-grep -o "A" S288C_reference_sequence_R64-2-1_20150113.fsa > testA
-wc test A
-grep -o "T" S288C_reference_sequence_R64-2-1_20150113.fsa > testT
-wc test T
-
-# Output from A and T (3766349 and 375080) added with the number of Gs and Cs implies there are 12157137 bp in total
-# GC count is 4634200 or 38%
+# Output: 2320576 (C) 2317100 (G) 3766349 (A) 3753080 (T)
+# 4637676 Cs and Gs, 12157105 bases in total, 38% GC-content
 
 # TASK 3 #
 
 wget --no-check-certificate https://downloads.yeastgenome.org/sequence/strains/Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_pep.fsa.gz      # downloads without checking certificate which previously showed up as an error 
-
 gunzip Y55_JRIF00000000_SGD_pep_fsa_gz                                             # Decompresses the zipped file
 
 wget --no-check-certificate https://downloads.yeastgenome.org/sequence/strains/Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_cds.fsa.gz      # downloads without checking certificate which previously showed up as an error 
-
 gunzip Y55_JRIF00000000_SGD_pep_cds_gz                                             # Decompresses the zipped file
 
+# part a #
+grep -v "^>" Y55_JRIF00000000_SGD_cds.fsa > testYGG                              # removes header lines from the fasta
+grep -o "C" testYGG > testYGG_C                                                  # saves all Cs in the fasta as separate lines in the new file
+grep -o "G" testYGG > testYGG_G         
+grep -o "A" testYGG > testYGG_A              
+grep -o "T" testYGG > testYGG_T                         
 
+wc -l testYGG_C
+wc -l testYGG_G
+wc -l testYGG_A
+wc -l testYGG_T
 
+# Output: 1533588 (C) 1658347 (G) 2649091 (A) 2232804 (T)
+# 3191935 Cs and Gs, 8073830 bases in total, 39.5% GC-content
+# The number of Gs and Cs are lower in this sample, but since the total amount of bases also is lower, the GC-content percent is higher.
 
-
-
-
-
+# part b #
 
 
