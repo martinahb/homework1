@@ -1,6 +1,7 @@
 
 #========================# Homework 1 #========================#
 # Submitter: Martina, Hermanova Billstein | marbil | student6
+# Date: 2019-02-05
 # Comments:  homework1 is a directory I created and will be used as my working directory instead of the home directory
 #==============================================================#
 
@@ -139,10 +140,10 @@ less S288C_reference_genome_R64-2-1_20150113.fsa
 
 #===================# Section 6 - Homework #=====================#
 
-cd
-cd/homework1
+cd                                                          # changes directory to my home directory
+cd/homework1                                                # changes directory to my working directory for this homework
 
-nano answers_and_procedure_of_homework1				               		# creates a file in which i pasted the procedure so far
+nano procedure_and_answers             				               		# creates a file in which i pasted the procedure so far
 
 git init													                                       # Initializes git
 git add procedure_and_answers                              	# Adds the file to git
@@ -150,7 +151,11 @@ git status												                                     	# Shows the current 
 git commit -m "Procedure and answers up to section 6 task 3"        # Commits changes with the added message
 
 git remote add origin https://github.com/martinahb/homework1        # Adds the remote location I want to save my files
-git push origin master                                              # Saves the files added to git to the remote location
+git push origin master                                              # Saves the files added to git to the remote location (Needs username and password for github)
+
+# From this point on, I will edit and commit the procedure-file on the github website instead of in bash
+
+
  
 # TASK 1 #
 
@@ -180,11 +185,8 @@ wc -l testT
 
 # TASK 3 #
 
-wget --no-check-certificate https://downloads.yeastgenome.org/sequence/strains/Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_pep.fsa.gz      # downloads without checking certificate which previously showed up as an error 
-gunzip Y55_JRIF00000000_SGD_pep_fsa_gz                                             # Decompresses the zipped file
-
 wget --no-check-certificate https://downloads.yeastgenome.org/sequence/strains/Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_cds.fsa.gz      # downloads without checking certificate which previously showed up as an error 
-gunzip Y55_JRIF00000000_SGD_pep_cds_gz                                             # Decompresses the zipped file
+gunzip Y55_JRIF00000000_SGD_cds.fsa.gz                                           # Decompresses the zipped file
 
 # part a #
 grep -v "^>" Y55_JRIF00000000_SGD_cds.fsa > testYGG                              # removes header lines from the fasta
@@ -192,16 +194,31 @@ grep -o "C" testYGG > testYGG_C                                                 
 grep -o "G" testYGG > testYGG_G         
 grep -o "A" testYGG > testYGG_A              
 grep -o "T" testYGG > testYGG_T                         
+grep -o "N" testYGG | wc -l                                                      # greps all Ns in the given file and then (piped) counts them without saving it in a new file
 
 wc -l testYGG_C
 wc -l testYGG_G
 wc -l testYGG_A
 wc -l testYGG_T
 
-# Output: 1533588 (C) 1658347 (G) 2649091 (A) 2232804 (T)
-# 3191935 Cs and Gs, 8073830 bases in total, 39.5% GC-content
+# Output: 1533588 (C) 1658347 (G) 2649091 (A) 2232804 (T) 4723 (N)
+
+# 3191935 Cs and Gs
+# 8073830 bases in total (excluding Ns) gives 39.5% GC-content (Ns are excluded since it is unknown what bases they are)
+# 8078553 bases in total (including Ns) also gives 39.5% GC-content
 # The number of Gs and Cs are lower in this sample, but since the total amount of bases also is lower, the GC-content percent is higher.
 
 # part b #
 
+ grep "^>" Y55_JRIF00000000_SGD_cds.fsa | wc -l                                      # greps all header lines in the given file and then (piped) counts them
+ # Output: 5330 ORFs
 
+ grep "^>" orf_coding_all_R64-2-1_20150113.fasta | wc -l
+ # Output: 6713 ORFs
+
+# part c #
+
+grep "^>" Y55_JRIF00000000_SGD_cds.fsa| cut -c -8 | sort > ORF_YGG_sorted            # greps all header lines in the given file, then removes everything exept the first 8 characters from each line, then sorts the lines and saves it to a new file
+grep "^>" orf_coding_all_R64-2-1_20150113.fasta| cut -c -8 | sort > ORF_REF_sorted
+comm -12 ORF_YGG_sorted ORF_REF_sorted | wc -l                                       # compares the two given files. -12 means that the first two columns are removed (which otherwise prints lines unique for respective file). Thus only the column with common lines are kept. The common lines are then counted.
+# Output: 5168 common ORFs
